@@ -1,0 +1,324 @@
+{
+  "books": [
+    {
+      "id": "0",
+      "codeBook": "01",
+      "author": "J.K. Rowling",
+      "title": "Harry Potter and the Sorcerer's Stone",
+      "description": "Kisah tentang seorang anak yatim piatu yang menemukan bahwa dia adalah seorang penyihir terkenal.",
+      "year": "1997",
+      "price": 150000,
+      "coverBook": "https://preview.redd.it/5unn16axx1v81.jpg?auto=webp&s=7a49ac2def6b301ee91637fb6062b1ba4d0b77ac"
+    },
+    {
+      "id": "2",
+      "codeBook": "03",
+      "author": "Harper Lee",
+      "title": "To Kill a Mockingbird",
+      "description": "Mengisahkan perjuangan keadilan dalam kasus rasisme di Amerika Serikat.",
+      "year": "1960",
+      "price": 130000,
+      "coverBook": "https://media-be.chewy.com/wp-content/uploads/lion-cut-cat-shutterstock_744082066.jpg"
+    },
+    {
+      "id": "3",
+      "codeBook": "04",
+      "author": "Markus Zusak",
+      "title": "The Book Thief",
+      "description": "Kisah seorang gadis muda di Jerman Nazi yang mencuri buku dan belajar membaca di tengah masa perang.",
+      "year": "2005",
+      "price": 120000,
+      "coverBook": "https://cf.ltkcdn.net/cats/grooming/images/orig/325183-1600x1066-ginger-cat.jpg"
+    },
+    {
+      "id": "4",
+      "codeBook": "05",
+      "author": "F. Scott Fitzgerald",
+      "title": "The Great Gatsby",
+      "description": "Cerita tentang ambisi, cinta, dan kegagalan di era jazz Amerika.",
+      "year": "1925",
+      "price": 80000,
+      "coverBook": "https://preview.redd.it/5unn16axx1v81.jpg?auto=webp&s=7a49ac2def6b301ee91637fb6062b1ba4d0b77ac"
+    },
+    {
+      "id": "5",
+      "codeBook": "06",
+      "author": "Gabriel García Márquez",
+      "title": "One Hundred Years of Solitude",
+      "description": "Novel epik tentang keluarga Buendía yang hidup di desa fiksi Macondo.",
+      "year": "1967",
+      "price": 150000,
+      "coverBook": "https://cf.ltkcdn.net/cats/grooming/images/orig/325183-1600x1066-ginger-cat.jpg"
+    },
+    {
+      "id": "6",
+      "codeBook": "07",
+      "author": "Khaled Hosseini",
+      "title": "The Kite Runner",
+      "description": "Cerita tentang persahabatan dua anak laki-laki di Afghanistan yang terpecah oleh perang dan pengkhianatan.",
+      "year": "2003",
+      "price": 100000,
+      "coverBook": "https://assets.petco.com/petco/image/upload/f_auto,q_auto/cat-sitting-on-couch-100318-image-600w-400h-d"
+    },
+    {
+      "id": "7",
+      "codeBook": "08",
+      "author": "Jane Austen",
+      "title": "Pride and Prejudice",
+      "description": "Kisah cinta dan kebanggaan sosial di Inggris abad ke-19.",
+      "year": "1813",
+      "price": 70000,
+      "coverBook": "https://preview.redd.it/5unn16axx1v81.jpg?auto=webp&s=7a49ac2def6b301ee91637fb6062b1ba4d0b77ac"
+    },
+    {
+      "id": "8",
+      "codeBook": "09",
+      "author": "Paulo Coelho",
+      "title": "The Alchemist",
+      "description": "Petualangan spiritual seorang gembala dalam pencarian harta karun.",
+      "year": "1988",
+      "price": 120000,
+      "coverBook": "https://media-be.chewy.com/wp-content/uploads/lion-cut-cat-shutterstock_744082066.jpg"
+    },
+    {
+      "id": "9",
+      "codeBook": "10",
+      "author": "Herman Melville",
+      "title": "Moby-Dick",
+      "description": "Kisah pelaut dan obsesinya untuk menangkap paus raksasa bernama Moby-Dick.",
+      "year": "1851",
+      "price": 90000,
+      "coverBook": "https://cf.ltkcdn.net/cats/grooming/images/orig/325183-1600x1066-ginger-cat.jpg"
+    },
+    {
+      "id": "10",
+      "codeBook": "11",
+      "author": "Leo Tolstoy",
+      "title": "War and Peace",
+      "description": "Novel epik yang menggambarkan kehidupan Rusia selama invasi Napoleon.",
+      "year": "1869",
+      "price": 180000,
+      "coverBook": "https://preview.redd.it/5unn16axx1v81.jpg?auto=webp&s=7a49ac2def6b301ee91637fb6062b1ba4d0b77ac"
+    },
+    {
+      "id": "11",
+      "codeBook": "12",
+      "author": "J.R.R. Tolkien",
+      "title": "The Lord of the Rings: The Fellowship of the Ring",
+      "description": "Petualangan epik di dunia fantasi Middle-earth untuk menghancurkan cincin jahat.",
+      "year": "1954",
+      "price": 150000,
+      "coverBook": "https://media-be.chewy.com/wp-content/uploads/lion-cut-cat-shutterstock_744082066.jpg"
+    },
+    {
+      "id": "12",
+      "codeBook": "13",
+      "author": "Mary Shelley",
+      "title": "Frankenstein",
+      "description": "Kisah penciptaan monster yang bertanya-tanya tentang kemanusiaan dan kehidupan.",
+      "year": "1818",
+      "price": 70000,
+      "coverBook": "https://cf.ltkcdn.net/cats/grooming/images/orig/325183-1600x1066-ginger-cat.jpg"
+    },
+    {
+      "id": "13",
+      "codeBook": "14",
+      "author": "Ernest Hemingway",
+      "title": "The Old Man and the Sea",
+      "description": "Kisah seorang nelayan tua yang bertarung dengan ikan besar di laut.",
+      "year": "1952",
+      "price": 850000,
+      "coverBook": "https://assets.petco.com/petco/image/upload/f_auto,q_auto/cat-sitting-on-couch-100318-image-600w-400h-d"
+    },
+    {
+      "id": "14",
+      "codeBook": "15",
+      "author": "Yuval Noah Harari",
+      "title": "Sapiens: A Brief History of Humankind",
+      "description": "Buku nonfiksi tentang sejarah perkembangan manusia dari zaman purba hingga modern.",
+      "year": "2011",
+      "price": 150000,
+      "coverBook": "https://preview.redd.it/5unn16axx1v81.jpg?auto=webp&s=7a49ac2def6b301ee91637fb6062b1ba4d0b77ac"
+    },
+    {
+      "id": "15",
+      "codeBook": "16",
+      "author": "Margaret Atwood",
+      "title": "The Handmaid's Tale",
+      "description": "Novel dystopia tentang masyarakat yang menindas perempuan dengan sistem teokrasi.",
+      "year": "1985",
+      "price": 140000,
+      "coverBook": "https://media-be.chewy.com/wp-content/uploads/lion-cut-cat-shutterstock_744082066.jpg"
+    },
+    {
+      "id": "16",
+      "codeBook": "17",
+      "author": "Stephen King",
+      "title": "The Shining",
+      "description": "Horor psikologis tentang sebuah hotel berhantu yang mengancam keluarga yang tinggal di sana.",
+      "year": "1977",
+      "price": 120000,
+      "coverBook": "https://cf.ltkcdn.net/cats/grooming/images/orig/325183-1600x1066-ginger-cat.jpg"
+    },
+    {
+      "id": "17",
+      "codeBook": "18",
+      "author": "Dan Brown",
+      "title": "The Da Vinci Code",
+      "description": "Petualangan Robert Langdon dalam memecahkan misteri rahasia kuno yang tersembunyi dalam karya seni.",
+      "year": "2003",
+      "price": 130000,
+      "coverBook": "https://assets.petco.com/petco/image/upload/f_auto,q_auto/cat-sitting-on-couch-100318-image-600w-400h-d"
+    },
+    {
+      "id": "18",
+      "codeBook": "19",
+      "author": "Antoine de Saint-Exupéry",
+      "title": "The Little Prince",
+      "description": "Kisah puitis tentang seorang pangeran kecil yang menjelajahi dunia dan menemukan arti cinta dan kehidupan.",
+      "year": "1943",
+      "price": 90000,
+      "coverBook": "https://preview.redd.it/5unn16axx1v81.jpg?auto=webp&s=7a49ac2def6b301ee91637fb6062b1ba4d0b77ac"
+    },
+    {
+      "codeBook": "02",
+      "author": "John Steinbeck",
+      "title": "Of Mice and Men",
+      "description": "Kisah tentang dua pekerja migran di Amerika Serikat yang bermimpi memiliki tanah sendiri.",
+      "year": "1937",
+      "price": 80000,
+      "coverBook": "https://cf.ltkcdn.net/cats/grooming/images/orig/325183-1600x1066-ginger-cat.jpg",
+      "id": "19"
+    }
+  ],
+  "users": [
+    {
+      "codeBook": [
+        "01",
+        "02",
+        "03",
+        "11",
+        "12"
+      ],
+      "name": "Rina Setiawati",
+      "gender": "female",
+      "loanDate": "2024-10-18",
+      "returnDate": "2024-10-31",
+      "totalItem": 5,
+      "status": "notreturned",
+      "id": "0"
+    },
+    {
+      "codeBook": [
+        "03",
+        "04",
+        "05",
+        "06"
+      ],
+      "name": "Siti Nurhidayah",
+      "gender": "female",
+      "loanDate": "2024-10-16",
+      "returnDate": "2024-10-23",
+      "totalItem": 4,
+      "status": "returned",
+      "id": "2"
+    },
+    {
+      "id": "4",
+      "codeBook": [
+        "08",
+        "10"
+      ],
+      "name": "Dewi Sartika",
+      "gender": "female",
+      "loanDate": "2024-10-14",
+      "returnDate": "2024-10-21",
+      "totalItem": 2,
+      "status": "notreturned"
+    },
+    {
+      "codeBook": [
+        "03",
+        "04"
+      ],
+      "name": "Andi Nugroho L",
+      "gender": "male",
+      "loanDate": "2024-10-13",
+      "returnDate": "2024-10-20",
+      "totalItem": 2,
+      "status": "returned",
+      "id": "5"
+    },
+    {
+      "id": "6",
+      "codeBook": [
+        "20"
+      ],
+      "name": "Tri Lestari",
+      "gender": "female",
+      "loanDate": "2024-10-12",
+      "returnDate": "2024-10-19",
+      "totalItem": 1,
+      "status": "notreturned"
+    },
+    {
+      "codeBook": [
+        "09",
+        "12",
+        "17",
+        "19"
+      ],
+      "name": "Fajar Ramadha",
+      "gender": "male",
+      "loanDate": "2024-10-11",
+      "returnDate": "2024-10-18",
+      "totalItem": 4,
+      "status": "returned",
+      "id": "7"
+    },
+    {
+      "id": "8",
+      "codeBook": [
+        "03",
+        "04",
+        "07",
+        "12",
+        "13",
+        "14"
+      ],
+      "name": "Rini Kusuma",
+      "gender": "female",
+      "loanDate": "2024-10-10",
+      "returnDate": "2024-10-17",
+      "totalItem": 6,
+      "status": "notreturned"
+    },
+    {
+      "codeBook": [
+        "07",
+        "08"
+      ],
+      "name": "Bayu Wicaksono",
+      "gender": "male",
+      "loanDate": "2024-10-09",
+      "returnDate": "2024-10-16",
+      "totalItem": 2,
+      "status": "notreturned",
+      "id": "9"
+    },
+    {
+      "codeBook": [
+        "01",
+        "07",
+        "15"
+      ],
+      "name": "Tasya Farasya",
+      "gender": "female",
+      "loanDate": "2024-10-21",
+      "returnDate": "2024-10-22",
+      "totalItem": 3,
+      "status": "notreturned",
+      "id": "333.567310698774"
+    }
+  ]
+}
