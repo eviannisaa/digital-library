@@ -49,7 +49,7 @@ const DetailBook = () => {
                         }`}
                   >
                      <div
-                        className={`w-2 h-2 rounded-full${getStatusStyles(bookDetails?.status!).bg
+                        className={`w-2 h-2 rounded-full ${getStatusStyles(bookDetails?.status!).bg
                            }`}
                      ></div>
                      &nbsp;&nbsp;{bookDetails?.status}

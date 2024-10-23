@@ -73,7 +73,7 @@ export const useManageHooks = () => {
         description: "The book has been successfully updated.",
       });
 
-      navigate("/catalog-book");
+      navigate("/catalog-book/manage");
     } catch (error) {
       toast({
         title: "Failed!",

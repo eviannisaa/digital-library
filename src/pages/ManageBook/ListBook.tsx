@@ -185,7 +185,7 @@ export const columns: ColumnDef<Book | any>[] = [
                <Button
                   size="icon"
                   className="w-8 h-8"
-                  onClick={() => navigate(`/catalog-book/edit/${row.original.id}`)}
+                  onClick={() => window.location.href = `/catalog-book/edit/${row.original.id}`}
                >
                   <Pencil1Icon />
                </Button>

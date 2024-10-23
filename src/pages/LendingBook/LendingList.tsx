@@ -186,7 +186,7 @@ export const columns: ColumnDef<UserBorrow | any>[] = [
                <Button
                   size="icon"
                   className="w-8 h-8"
-                  onClick={() => navigate(`/lending-book/edit/${row.original.id}`)}
+                  onClick={() => window.location.href = `/lending-book/edit/${row.original.id}`}
                >
                   <Pencil1Icon />
                </Button>
