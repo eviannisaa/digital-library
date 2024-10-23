@@ -71,6 +71,7 @@ const DetailBook = () => {
 
                <p className="text-sm font-normal text-gray-600">
                   {bookDetails?.description}
+
                   {/* additional text for the summary */}
                   Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas
                   pellentesque nunc euismod congue efficitur. Quisque venenatis
