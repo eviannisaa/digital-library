@@ -1,50 +1,55 @@
 # React + TypeScript + Vite
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Digital Library
+Digital Library is a platform designed to facilitate users in borrowing books and managing the book catalog. This system allows users to explore various book collections, borrow the books they desire, and perform CRUD (Create, Read, Update, Delete) operations on the book catalog.
 
-Currently, two official plugins are available:
+## Main Features
+- Book catalog display with filters and search
+- Book details view
+- Book status tracking (Available, Borrowed, Reserved)
+- Book catalog management (CRUD operations)
+- Basic lending status visualization
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Technologies Used
+- Tech Stack : React
+- Build Tool : Vite
+- UI/Component : shadcn/ui
+- State Management : Zustand
+- Mock Data : JSON Server
 
-## Expanding the ESLint configuration
+## Prerequisites
+Before getting started, make sure you have the following installed:
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+- [Node.js](https://nodejs.org/)
+- npm
 
-- Configure the top-level `parserOptions` property like this:
+## Installation
+Follow these steps to set up the project:
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+1. **Clone the repository:**
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+   ```bash
+   git clone https://github.com/username/repo-name.git
+   cd repo-name
+   ```
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+2. **Install dependencies**
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+   ```bash
+   npm install
+   ```
+
+3. **Run the application:**
+
+   ```bash
+   npm run start
+   ```
+
+4. **Access the application:**
+   ➜ Local: http://localhost:5173/
+
+<br>
+
+Thank you for visiting! I hope you find this information useful and helpful!
+<br>
+Happy Hacking! 💻✨
