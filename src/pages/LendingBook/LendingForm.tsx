@@ -175,7 +175,10 @@ const LendingForm = () => {
                                                       const totalCount = newValue.length;
                                                       form.setValue("totalBooks", totalCount);
                                                    }}
-                                                   disabled={item.status === "Borrowed" || item.status === "Reserved"}
+                                                   disabled={
+                                                      item.status === "Borrowed" ||
+                                                      item.status === "Reserved"
+                                                   }
                                                 />
                                              </FormControl>
                                              <FormLabel className="text-sm font-normal">

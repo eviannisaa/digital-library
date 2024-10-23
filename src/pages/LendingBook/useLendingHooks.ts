@@ -8,9 +8,11 @@ import { useBorrowStore } from "@/store/useBorrowStore";
 import { z } from "zod";
 
 export const useLandingHooks = () => {
+  /*  -------------------------------- STATE --------------------------------- */
+
+  const { id } = useParams<{ id: string }>();
   const { toast } = useToast();
   const navigate = useNavigate();
-  const { id } = useParams<{ id: string }>();
   const { addUserBorrow, userDetails, editUserBorrow } = useBorrowStore();
 
   const form = useForm<z.infer<typeof validationSchema>>({
@@ -18,6 +20,8 @@ export const useLandingHooks = () => {
     defaultValues: defaultValue,
     mode: "onSubmit",
   });
+
+  /* --------------------------- HANDLER FUNCTIONS --------------------------- */
 
   const onAddedLending = async (values: z.infer<typeof validationSchema>) => {
     try {
@@ -37,21 +41,6 @@ export const useLandingHooks = () => {
     }
   };
 
-  useEffect(() => {
-    if (userDetails) {
-      form.reset({
-        name: userDetails?.name ?? "",
-        gender: userDetails?.gender ?? "",
-        lendingDate: userDetails?.lendingDate ?? "",
-        returnDate: userDetails?.returnDate ?? "",
-        totalBooks: userDetails?.totalBooks ?? 0,
-        contact: userDetails?.contact ?? "",
-        codeBook: userDetails?.codeBook ?? "",
-        status: userDetails?.status ?? "",
-      });
-    }
-  }, [form, userDetails]);
-
   const onUpdatedLending = async (data: any) => {
     try {
       await editUserBorrow(Number(id), data);
@@ -68,6 +57,25 @@ export const useLandingHooks = () => {
       });
     }
   };
+
+  /* ----------------------------- EFFECT HANDLER ---------------------------- */
+
+  useEffect(() => {
+    if (userDetails) {
+      form.reset({
+        name: userDetails?.name ?? "",
+        gender: userDetails?.gender ?? "",
+        lendingDate: userDetails?.lendingDate ?? "",
+        returnDate: userDetails?.returnDate ?? "",
+        totalBooks: userDetails?.totalBooks ?? 0,
+        contact: userDetails?.contact ?? "",
+        codeBook: userDetails?.codeBook ?? "",
+        status: userDetails?.status ?? "",
+      });
+    }
+  }, [form, userDetails]);
+
+  /* --------------------------------- MENU --------------------------------- */
 
   const listMenus = [
     {
@@ -105,13 +113,40 @@ export const useLandingHooks = () => {
     },
   ];
 
+  /* ------------------------------ STYLING LOGIC ---------------------------- */
+
+  const getStatusStyles = (status: string) => {
+    let variant: "default" | "destructive" | "secondary";
+    let text: string;
+
+    switch (status) {
+      case "not yet returned":
+        variant = "default";
+        text = "Not Yet Returned";
+        break;
+      case "returned":
+        variant = "secondary";
+        text = "Returned";
+        break;
+      default:
+        variant = "destructive";
+        text = "Reserved";
+        break;
+    }
+
+    return { variant, text };
+  };
+
+  /* ---------------------------------- RETURN ------------------------------- */
+
   return {
+    id,
+    form,
     listMenus,
     formMenus,
-    form,
     onAddedLending,
     onUpdatedLending,
-    id,
     updateMenus,
+    getStatusStyles,
   };
 };

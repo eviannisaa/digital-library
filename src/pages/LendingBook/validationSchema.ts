@@ -12,7 +12,7 @@ export const validationSchema = z.object({
   returnDate: z.string().nonempty({ message: "Return Date cannot be empty." }),
   totalBooks: z.number().optional(),
   status: z.string(),
-  contact: z.string().nonempty({ message: "Name cannot be empty." }),
+  contact: z.string().nonempty({ message: "Contact cannot be empty." }),
 });
 
 export const defaultValue = {

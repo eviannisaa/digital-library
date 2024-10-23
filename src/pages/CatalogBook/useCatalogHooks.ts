@@ -18,6 +18,18 @@ export const useCatalogHooks = () => {
     setCurrentPage((prevPage) => prevPage + 1);
   };
 
+  /* ----------------------------- HELPER FUNCTION --------------------------- */
+
+  const formatPrice = (price: number) => {
+    if (typeof price !== "number" || isNaN(price)) {
+      return "$0.00";
+    }
+    return price.toLocaleString("en-US", {
+      style: "currency",
+      currency: "USD",
+    });
+  };
+
   /* ---------------------------------- MENU ---------------------------------- */
 
   const menus = [
@@ -48,27 +60,15 @@ export const useCatalogHooks = () => {
     }
   };
 
-  /* ----------------------------- HELPER FUNCTION --------------------------- */
-
-  const formatPrice = (price: number) => {
-    if (typeof price !== "number" || isNaN(price)) {
-      return "$0.00";
-    }
-    return price.toLocaleString("en-US", {
-      style: "currency",
-      currency: "USD",
-    });
-  };
-
   /* ---------------------------------- RETURN ------------------------------- */
 
   return {
     id,
     navigate,
-    menus,
-    formatPrice,
-    getStatusStyles,
     displayedBooks,
     handleLoadMore,
+    formatPrice,
+    menus,
+    getStatusStyles,
   };
 };

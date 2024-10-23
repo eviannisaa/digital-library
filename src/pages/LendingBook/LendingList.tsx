@@ -42,9 +42,8 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { useBorrowStore } from "@/store/useBorrowStore";
 import { ListSkeleton } from "@/components/ui/skeleton";
-import Layout from "@/components/ui/layout";
 import { useLandingHooks } from "./useLendingHooks";
-import { useNavigate } from "react-router-dom";
+import Layout from "@/components/ui/layout";
 
 interface UserBorrow {
    id: number;
@@ -125,22 +124,10 @@ export const columns: ColumnDef<UserBorrow | any>[] = [
       accessorKey: "status",
       header: () => <div className="text-center">Status</div>,
       cell: ({ row }) => {
-         const status = row.getValue<string>("status")?.toLowerCase();
-
-         let variant: "default" | "destructive" | "secondary";
-         let text: string;
-
-         if (status === "not yet returned") {
-            variant = "default";
-            text = "Not Yet Returned";
-         } else if (status === "returned") {
-            variant = "secondary";
-            text = "Returned";
-         } else {
-            variant = "destructive";
-            text = "Reserved";
-         }
-
+         const { getStatusStyles } = useLandingHooks();
+         const { variant, text } = getStatusStyles(
+            row.getValue<string>("status")?.toLowerCase(),
+         );
          return (
             <div className="flex justify-center">
                <Badge variant={variant} className="text-xs">
@@ -156,7 +143,6 @@ export const columns: ColumnDef<UserBorrow | any>[] = [
       header: () => <div className="text-center">Actions</div>,
       cell: ({ row }) => {
          const { handleDeleteUser } = useBorrowStore();
-         const navigate = useNavigate();
          return (
             <div className="flex flex-row justify-center gap-6">
                <AlertDialog>
@@ -186,7 +172,9 @@ export const columns: ColumnDef<UserBorrow | any>[] = [
                <Button
                   size="icon"
                   className="w-8 h-8"
-                  onClick={() => window.location.href = `/lending-book/edit/${row.original.id}`}
+                  onClick={() =>
+                     (window.location.href = `/lending-book/edit/${row.original.id}`)
+                  }
                >
                   <Pencil1Icon />
                </Button>
