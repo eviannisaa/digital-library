@@ -1,7 +1,3 @@
-import { useRef } from "react";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
 import {
    Form,
    FormControl,
@@ -12,65 +8,41 @@ import {
    FormMessage,
 } from "@/components/ui/form";
 import { Card } from "@/components/ui/card";
-import Layout from "@/components/ui/layout";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { useBooks } from "@/context/BooksContext";
-import { useToast } from "@/hooks/use-toast";
-import { defaultValue, validationSchema } from "./validationSchema";
+import { FormSkeleton } from "@/components/ui/skeleton";
+import { useBooksStore } from "@/store/useBookStore";
+import { useManageHooks } from "./useManageHooks";
+import Layout from "@/components/ui/layout";
+import { useEffect } from "react";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Label } from "@/components/ui/label";
 
-const menus = [
-   {
-      label: "Catalog Book",
-      active: false,
-      to: "/catalog-book",
-   },
-   {
-      label: "Created Book",
-      active: true,
-   },
-];
+const EditBook = () => {
+   const { isLoadingBooks, fetchBookById } = useBooksStore();
+   const { editMenus, form, onSubmitEditedBook, fileInputRef, id } =
+      useManageHooks();
 
-const CreateBook = () => {
-   const { addBooks } = useBooks();
-   const { toast } = useToast();
-   const fileInputRef = useRef<HTMLInputElement | null>(null);
+   useEffect(() => {
+      const fetchBookData = async () => {
+         try {
+            await fetchBookById(Number(id));
+         } catch (error) { }
+      };
+      fetchBookData();
+   }, [id, fetchBookById]);
 
-   const form = useForm<z.infer<typeof validationSchema>>({
-      resolver: zodResolver(validationSchema),
-      defaultValues: defaultValue,
-      mode: "onSubmit",
-   });
-
-   const onSubmit = async (values: z.infer<typeof validationSchema>) => {
-      try {
-         await addBooks({
-            ...values,
-            id: Math.random() * 1000,
-            price: values.price ? parseFloat(values.price) : undefined,
-         });
-
-         form.reset();
-         if (fileInputRef.current) {
-            fileInputRef.current.value = "";
-         }
-
-         toast({
-            title: "Success!",
-            description: "The book has been added successfully.",
-         });
-      } catch (error) {
-         console.error("Failed to add book:", error);
-      }
-   };
+   if (isLoadingBooks) {
+      return <FormSkeleton />;
+   }
 
    return (
-      <Layout submenus={menus}>
+      <Layout submenus={editMenus}>
          <Card className="p-8 w-3/4 m-auto">
             <Form {...form}>
                <form
-                  onSubmit={form.handleSubmit(onSubmit)}
-                  className="grid grid-cols-2 gap-y-3 gap-x-10 items-start"
+                  onSubmit={form.handleSubmit(onSubmitEditedBook)}
+                  className="grid grid-cols-1 md:grid-cols-2 gap-y-3 gap-x-10 items-start"
                >
                   <FormField
                      control={form.control}
@@ -121,11 +93,10 @@ const CreateBook = () => {
                               <Input
                                  placeholder="Input Year"
                                  {...field}
-                                 pattern="\d*"
                                  onInput={(e) => {
                                     const input = e.target as HTMLInputElement;
-                                    input.value = input.value.replace(/[^0-9]/g, "");
-                                    field.onChange(input.value);
+                                    const value = input.value.replace(/[^0-9]/g, "");
+                                    field.onChange(value ? parseInt(value) : undefined);
                                  }}
                               />
                            </FormControl>
@@ -148,13 +119,15 @@ const CreateBook = () => {
                                     const file = e.target.files?.[0];
                                     if (file) {
                                        field.onChange(file.name);
-                                    } else {
-                                       field.onChange("");
                                     }
                                  }}
                               />
                            </FormControl>
-                           <FormDescription>Format: JPG, PNG</FormDescription>
+                           <FormDescription className="flex justify-between">
+                              <p className="font-semibold overflow-hidden whitespace-nowrap text-ellipsis">
+                                 Current file : {field.value}
+                              </p>
+                           </FormDescription>
                            <FormMessage />
                         </FormItem>
                      )}
@@ -172,6 +145,7 @@ const CreateBook = () => {
                         </FormItem>
                      )}
                   />
+
                   <FormField
                      control={form.control}
                      name="price"
@@ -182,12 +156,10 @@ const CreateBook = () => {
                               <Input
                                  placeholder="Input Price"
                                  {...field}
-                                 pattern="\d*"
-                                 min="0"
                                  onInput={(e) => {
                                     const input = e.target as HTMLInputElement;
-                                    input.value = input.value.replace(/[^0-9]/g, "");
-                                    field.onChange(input.value);
+                                    const value = input.value.replace(/[^0-9]/g, "");
+                                    field.onChange(value ? parseInt(value) : undefined);
                                  }}
                               />
                            </FormControl>
@@ -195,8 +167,48 @@ const CreateBook = () => {
                         </FormItem>
                      )}
                   />
+                  <FormField
+                     control={form.control}
+                     name="isbn"
+                     render={({ field }) => (
+                        <FormItem>
+                           <FormLabel>ISBN</FormLabel>
+                           <FormControl>
+                              <Input placeholder="Input ISBN" {...field} />
+                           </FormControl>
+                           <FormMessage />
+                        </FormItem>
+                     )}
+                  />
+                  <FormField
+                     control={form.control}
+                     name="status"
+                     render={({ field }) => (
+                        <FormItem>
+                           <FormLabel>Status</FormLabel>
+                           <RadioGroup
+                              value={field.value}
+                              onValueChange={field.onChange}
+                              className="flex flex-col lg:flex-row justify-between"
+                           >
+                              <div className="flex items-center space-x-2">
+                                 <RadioGroupItem value="Available" id="r1" />
+                                 <Label htmlFor="Available">Available</Label>
+                              </div>
+                              <div className="flex items-center space-x-2">
+                                 <RadioGroupItem value="Borrowed" id="r2" />
+                                 <Label htmlFor="Borrowed">Borrowed</Label>
+                              </div>
+                              <div className="flex items-center space-x-2">
+                                 <RadioGroupItem value="Reserved" id="r2" />
+                                 <Label htmlFor="Reserved">Reserved</Label>
+                              </div>
+                           </RadioGroup>
+                        </FormItem>
+                     )}
+                  />
                   <div className="flex justify-end">
-                     <Button type="submit" size="lg" className="mt-8 w-60">
+                     <Button type="submit" size="lg" className="mt-8 md:w-60 w-full">
                         Save
                      </Button>
                   </div>
@@ -207,4 +219,4 @@ const CreateBook = () => {
    );
 };
 
-export default CreateBook;
+export default EditBook;

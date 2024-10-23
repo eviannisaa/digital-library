@@ -1,11 +1,4 @@
 import { useEffect } from "react";
-import { useParams } from "react-router-dom";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useToast } from "@/hooks/use-toast";
-import { useUserBorrow } from "@/context/UsersContext";
-import { defaultValue, validationSchema } from "./validationSchema";
 import {
    Form,
    FormControl,
@@ -22,86 +15,40 @@ import { Button } from "@/components/ui/button";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
-import { useBooks } from "@/context/BooksContext";
 import { FormSkeleton } from "@/components/ui/skeleton";
+import { useBorrowStore } from "@/store/useBorrowStore";
+import { useBooksStore } from "@/store/useBookStore";
+import { useLandingHooks } from "./useLendingHooks";
 
-const menus = [
-   {
-      label: "Borrow Book",
-      active: false,
-      to: "/borrow-book",
-   },
-   {
-      label: "Edit User",
-      active: true,
-   },
-];
-
-const EditUserBorrow = () => {
-   const { id } = useParams<{ id: string }>();
-   const { editUserBorrow, isLoadingUsers } = useUserBorrow();
-   const { filteredBooks, isLoadingBooks } = useBooks();
-   const { toast } = useToast();
-
-   const form = useForm<z.infer<typeof validationSchema>>({
-      resolver: zodResolver(validationSchema),
-      defaultValues: defaultValue,
-      mode: "onSubmit",
-   });
-
-   const fetchUserData = async () => {
-      try {
-         const response = await fetch(`http://localhost:3000/users/${id}`);
-         const json = await response.json();
-         const codeBook = Array.isArray(json.codeBook)
-            ? json.codeBook
-            : [json.codeBook];
-         form.reset({
-            codeBook: codeBook ?? [],
-            name: json.name ?? "",
-            gender: json.gender ?? "",
-            loanDate: json.loanDate
-               ? new Date(json.loanDate).toISOString().split("T")[0]
-               : "",
-            returnDate: json.returnDate ?? "",
-            totalItem: json.totalItem ?? "",
-            status: json.status ?? "",
-         });
-      } catch (error) {
-         console.error("Error fetching book data:", error);
-      }
-   };
+const LendingUpdate = () => {
+   const { isLoadingUsers, fetchUserById, fetchUsers } = useBorrowStore();
+   const { filteredBooks, isLoadingBooks, fetchBooks } = useBooksStore();
+   const { id, updateMenus, form, onUpdatedLending } = useLandingHooks();
 
    useEffect(() => {
-      fetchUserData();
-   }, [id, form]);
+      const fetchBookData = async () => {
+         try {
+            await fetchUserById(Number(id));
+         } catch (error) { }
+      };
+      fetchBookData();
+   }, [id, fetchUserById]);
 
-   const onSubmit = async (data: any) => {
-      fetchUserData();
-
-      try {
-         await editUserBorrow(Number(id), data);
-         toast({
-            title: "Success!",
-            description: "The book has been successfully updated.",
-         });
-      } catch (error) {
-         console.error("Error updating book:", error);
-      }
-
-      window.location.href = "/borrow-book";
-   };
+   useEffect(() => {
+      fetchBooks();
+      fetchUsers();
+   }, [fetchBooks, fetchUsers]);
 
    if (isLoadingUsers && isLoadingBooks) {
       return <FormSkeleton />;
    }
 
    return (
-      <Layout submenus={menus}>
+      <Layout submenus={updateMenus}>
          <Card className="p-8 w-3/4 m-auto">
             <Form {...form}>
-               <form onSubmit={form.handleSubmit(onSubmit)}>
-                  <div className="grid grid-cols-2 gap-y-3 gap-x-10 mb-4 items-start">
+               <form onSubmit={form.handleSubmit(onUpdatedLending)}>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-y-3 gap-x-10 mb-5 items-start">
                      <FormField
                         control={form.control}
                         name="name"
@@ -127,12 +74,12 @@ const EditUserBorrow = () => {
                                  className="grid grid-cols-2"
                               >
                                  <div className="flex items-center space-x-2">
-                                    <RadioGroupItem value="male" id="r1" />
-                                    <Label htmlFor="male">Male</Label>
+                                    <RadioGroupItem value="Male" id="r1" />
+                                    <Label htmlFor="Male">Male</Label>
                                  </div>
                                  <div className="flex items-center space-x-2">
-                                    <RadioGroupItem value="female" id="r2" />
-                                    <Label htmlFor="female">Female</Label>
+                                    <RadioGroupItem value="Female" id="r2" />
+                                    <Label htmlFor="Female">Female</Label>
                                  </div>
                               </RadioGroup>
                            </FormItem>
@@ -140,10 +87,10 @@ const EditUserBorrow = () => {
                      />
                      <FormField
                         control={form.control}
-                        name="loanDate"
+                        name="lendingDate"
                         render={({ field }) => (
                            <FormItem>
-                              <FormLabel>Loan Date</FormLabel>
+                              <FormLabel>Lending Date</FormLabel>
                               <FormControl>
                                  <Input
                                     placeholder="Input Description"
@@ -163,9 +110,9 @@ const EditUserBorrow = () => {
                               <FormLabel>Return Date</FormLabel>
                               <FormControl>
                                  <Input
-                                    placeholder="Input Return Book"
                                     {...field}
                                     type="date"
+                                    min={new Date().toISOString().slice(0, 10)}
                                  />
                               </FormControl>
                               <FormMessage />
@@ -174,10 +121,22 @@ const EditUserBorrow = () => {
                      />
                      <FormField
                         control={form.control}
-                        name="totalItem"
+                        name="contact"
                         render={({ field }) => (
                            <FormItem>
-                              <FormLabel>Total Book</FormLabel>
+                              <FormLabel>Contact</FormLabel>
+                              <FormControl>
+                                 <Input placeholder="Input Contact" {...field} />
+                              </FormControl>
+                           </FormItem>
+                        )}
+                     />
+                     <FormField
+                        control={form.control}
+                        name="totalBooks"
+                        render={({ field }) => (
+                           <FormItem>
+                              <FormLabel>Total Books</FormLabel>
                               <FormControl>
                                  <Input {...field} disabled />
                               </FormControl>
@@ -193,15 +152,21 @@ const EditUserBorrow = () => {
                               <RadioGroup
                                  value={field.value}
                                  onValueChange={field.onChange}
-                                 className="grid grid-cols-2"
+                                 className="flex flex-col lg:flex-row justify-between"
                               >
+                                 <div className="flex items-center space-x-2">
+                                    <RadioGroupItem value="reserved" id="r2" />
+                                    <Label htmlFor="reserved">Reserved</Label>
+                                 </div>
                                  <div className="flex items-center space-x-2">
                                     <RadioGroupItem value="returned" id="r1" />
                                     <Label htmlFor="returned">Returned</Label>
                                  </div>
                                  <div className="flex items-center space-x-2">
-                                    <RadioGroupItem value="notreturned" id="r2" />
-                                    <Label htmlFor="notreturned">Not Returned</Label>
+                                    <RadioGroupItem value="not yet returned" id="r2" />
+                                    <Label htmlFor="not yet returned">
+                                       Not Yet Returned
+                                    </Label>
                                  </div>
                               </RadioGroup>
                            </FormItem>
@@ -221,7 +186,7 @@ const EditUserBorrow = () => {
                                  Select the books you want to borrow
                               </FormDescription>
                            </div>
-                           <div className="grid grid-cols-2 gap-3 items-start">
+                           <div className="grid grid-cols-1 md:grid-cols-2 gap-3 items-start">
                               {filteredBooks.map((item) => (
                                  <FormField
                                     key={item.id}
@@ -246,8 +211,13 @@ const EditUserBorrow = () => {
                                                       field.onChange(newValue);
 
                                                       const totalCount = newValue.length;
-                                                      form.setValue("totalItem", totalCount);
+                                                      form.setValue("totalBooks", totalCount);
                                                    }}
+                                                   disabled={
+                                                      item.id !== Number(id) &&
+                                                      (item.status === "Borrowed" ||
+                                                         item.status === "Reserved")
+                                                   }
                                                 />
                                              </FormControl>
                                              <FormLabel className="text-sm font-normal">
@@ -264,7 +234,7 @@ const EditUserBorrow = () => {
                      )}
                   />
                   <div className="flex justify-end">
-                     <Button type="submit" size="lg" className="mt-8 w-40">
+                     <Button type="submit" size="lg" className="mt-8 md:w-40 w-full">
                         Save
                      </Button>
                   </div>
@@ -275,4 +245,4 @@ const EditUserBorrow = () => {
    );
 };
 
-export default EditUserBorrow;
+export default LendingUpdate;

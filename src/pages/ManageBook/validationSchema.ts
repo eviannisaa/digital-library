@@ -5,17 +5,27 @@ export const validationSchema = z.object({
   author: z.string().nonempty({ message: "Author cannot be empty." }),
   title: z.string().nonempty({ message: "Title cannot be empty." }),
   description: z.string().nonempty({ message: "Description cannot be empty." }),
-  year: z.string().nonempty({ message: "Year cannot be empty." }),
-  price: z.string().optional(),
+  year: z.coerce.number({
+    required_error: "Year cannot be empty",
+    invalid_type_error: "Year must be a number",
+    message: "Year cannot be empty.",
+  }),
+  price: z.coerce.number({
+    invalid_type_error: "Price must be a number",
+  }),
   coverBook: z.string().nonempty({ message: "Cover Book cannot be empty." }),
+  status: z.string(),
+  isbn: z.string(),
 });
 
 export const defaultValue = {
   author: "",
   title: "",
   description: "",
-  year: "",
-  price: "",
+  year: undefined,
+  price: undefined,
   coverBook: "",
   codeBook: "",
+  status: "Available",
+  isbn: "",
 };

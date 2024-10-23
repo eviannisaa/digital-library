@@ -1,7 +1,4 @@
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useNavigate } from "react-router-dom";
-import { useForm } from "react-hook-form";
+import { useEffect } from "react";
 import {
    Form,
    FormControl,
@@ -15,61 +12,26 @@ import { Card } from "@/components/ui/card";
 import Layout from "@/components/ui/layout";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { useBooks } from "@/context/BooksContext";
-import { useToast } from "@/hooks/use-toast";
-import { defaultValue, validationSchema } from "./validationSchema";
-import { useUserBorrow } from "@/context/UsersContext";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
+import { useBooksStore } from "@/store/useBookStore";
+import { useLandingHooks } from "./useLendingHooks";
 
-const menus = [
-   {
-      label: "Borrow Book",
-      active: false,
-      to: "/borrow-book",
-   },
-   {
-      label: "Form Loan",
-      active: true,
-   },
-];
+const LendingForm = () => {
+   const { filteredBooks, fetchBooks } = useBooksStore();
+   const { formMenus, form, onAddedLending } = useLandingHooks();
 
-const FormLoan = () => {
-   const { addUserBorrow } = useUserBorrow();
-   const { filteredBooks } = useBooks();
-   const { toast } = useToast();
-   const navigate = useNavigate();
-
-   const form = useForm<z.infer<typeof validationSchema>>({
-      resolver: zodResolver(validationSchema),
-      defaultValues: defaultValue,
-      mode: "onSubmit",
-   });
-
-   const onSubmit = async (values: z.infer<typeof validationSchema>) => {
-      try {
-         await addUserBorrow({
-            ...values,
-            id: Math.random() * 1000,
-         });
-         form.reset();
-         toast({
-            title: "Success!",
-            description: "The user has been added successfully.",
-         });
-      } catch (error) {
-         console.error("Failed to add user:", error);
-      }
-      navigate("/borrow-book");
-   };
+   useEffect(() => {
+      fetchBooks();
+   }, [fetchBooks]);
 
    return (
-      <Layout submenus={menus}>
+      <Layout submenus={formMenus}>
          <Card className="p-8 w-3/4 m-auto">
             <Form {...form}>
-               <form onSubmit={form.handleSubmit(onSubmit)}>
-                  <div className="grid grid-cols-2 gap-y-3 gap-x-10 mb-4 items-start">
+               <form onSubmit={form.handleSubmit(onAddedLending)}>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-y-3 gap-x-10 mb-4 items-start">
                      <FormField
                         control={form.control}
                         name="name"
@@ -95,11 +57,11 @@ const FormLoan = () => {
                                  className="grid grid-cols-2"
                               >
                                  <div className="flex items-center space-x-2">
-                                    <RadioGroupItem value="male" id="r1" />
+                                    <RadioGroupItem value="Male" id="r1" />
                                     <Label htmlFor="male">Male</Label>
                                  </div>
                                  <div className="flex items-center space-x-2">
-                                    <RadioGroupItem value="female" id="r2" />
+                                    <RadioGroupItem value="Female" id="r2" />
                                     <Label htmlFor="female">Female</Label>
                                  </div>
                               </RadioGroup>
@@ -108,10 +70,10 @@ const FormLoan = () => {
                      />
                      <FormField
                         control={form.control}
-                        name="loanDate"
+                        name="lendingDate"
                         render={({ field }) => (
                            <FormItem>
-                              <FormLabel>Loan Date</FormLabel>
+                              <FormLabel>Lending Date</FormLabel>
                               <FormControl>
                                  <Input
                                     placeholder="Input Description"
@@ -134,17 +96,43 @@ const FormLoan = () => {
                                     placeholder="Input Return Book"
                                     {...field}
                                     type="date"
+                                    min={new Date().toISOString().slice(0, 10)}
                                     onChange={(e) => {
                                        const selectedDate = e.target.value;
                                        field.onChange(selectedDate);
                                        const currentDate = new Date().toISOString();
                                        if (currentDate <= selectedDate) {
-                                          form.setValue("status", "notreturned");
+                                          form.setValue("status", "not yet returned");
                                        }
                                     }}
                                  />
                               </FormControl>
                               <FormMessage />
+                           </FormItem>
+                        )}
+                     />
+                     <FormField
+                        control={form.control}
+                        name="contact"
+                        render={({ field }) => (
+                           <FormItem>
+                              <FormLabel>Contact</FormLabel>
+                              <FormControl>
+                                 <Input placeholder="Input Contact" {...field} />
+                              </FormControl>
+                              <FormMessage />
+                           </FormItem>
+                        )}
+                     />
+                     <FormField
+                        control={form.control}
+                        name="totalBooks"
+                        render={({ field }) => (
+                           <FormItem>
+                              <FormLabel>Total Books</FormLabel>
+                              <FormControl>
+                                 <Input disabled {...field} />
+                              </FormControl>
                            </FormItem>
                         )}
                      />
@@ -160,7 +148,7 @@ const FormLoan = () => {
                                  Select the books you want to borrow
                               </FormDescription>
                            </div>
-                           <div className="grid grid-cols-2 gap-3 items-start">
+                           <div className="grid grid-cols-1 md:grid-cols-2 gap-3 items-start">
                               {filteredBooks.map((item) => (
                                  <FormField
                                     key={item.id}
@@ -185,8 +173,9 @@ const FormLoan = () => {
                                                       field.onChange(newValue);
 
                                                       const totalCount = newValue.length;
-                                                      form.setValue("totalItem", totalCount);
+                                                      form.setValue("totalBooks", totalCount);
                                                    }}
+                                                   disabled={item.status === "Borrowed" || item.status === "Reserved"}
                                                 />
                                              </FormControl>
                                              <FormLabel className="text-sm font-normal">
@@ -205,17 +194,6 @@ const FormLoan = () => {
                   <div className="hidden">
                      <FormField
                         control={form.control}
-                        name="totalItem"
-                        render={({ field }) => (
-                           <FormItem>
-                              <FormControl>
-                                 <Input {...field} />
-                              </FormControl>
-                           </FormItem>
-                        )}
-                     />
-                     <FormField
-                        control={form.control}
                         name="status"
                         render={({ field }) => (
                            <FormItem>
@@ -228,7 +206,7 @@ const FormLoan = () => {
                   </div>
 
                   <div className="flex justify-end">
-                     <Button type="submit" size="lg" className="mt-8 w-40">
+                     <Button type="submit" size="lg" className="mt-8 md:w-40 w-full">
                         Save
                      </Button>
                   </div>
@@ -239,4 +217,4 @@ const FormLoan = () => {
    );
 };
 
-export default FormLoan;
+export default LendingForm;

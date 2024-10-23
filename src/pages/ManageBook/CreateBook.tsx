@@ -1,6 +1,3 @@
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
 import {
    Form,
    FormControl,
@@ -11,87 +8,21 @@ import {
    FormMessage,
 } from "@/components/ui/form";
 import { Card } from "@/components/ui/card";
-import Layout from "@/components/ui/layout";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { useBooks } from "@/context/BooksContext";
-import { useToast } from "@/hooks/use-toast";
-import { defaultValue, validationSchema } from "./validationSchema";
-import { useNavigate, useParams } from "react-router-dom";
-import { useEffect, useRef } from "react";
-import { FormSkeleton } from "@/components/ui/skeleton";
+import { useManageHooks } from "./useManageHooks";
+import Layout from "@/components/ui/layout";
 
-const menus = [
-   {
-      label: "Catalog Book",
-      active: false,
-      to: "/catalog-book",
-   },
-   {
-      label: "Updated Book",
-      active: true,
-   },
-];
-
-const EditBook = () => {
-   const { id } = useParams<{ id: string }>();
-   const fileInputRef = useRef<HTMLInputElement | null>(null);
-   const navigate = useNavigate();
-   const { editBook, isLoadingBooks } = useBooks();
-   const { toast } = useToast();
-
-   const form = useForm<z.infer<typeof validationSchema>>({
-      resolver: zodResolver(validationSchema),
-      defaultValues: defaultValue,
-      mode: "onSubmit",
-   });
-
-   useEffect(() => {
-      const fetchBookData = async () => {
-         try {
-            const response = await fetch(`http://localhost:3000/books/${id}`);
-            const json = await response.json();
-            form.reset({
-               author: json.author ?? "",
-               title: json.title ?? "",
-               description: json.description ?? "",
-               year: json.year ?? "",
-               price: json.price ? json.price.toString() : "",
-               coverBook: json.coverBook ?? "",
-               codeBook: json.codeBook ?? "",
-            });
-         } catch (error) {
-            console.error("Error fetching book data:", error);
-         }
-      };
-      fetchBookData();
-   }, [id, form]);
-
-   const onSubmit = async (data: any) => {
-      try {
-         await editBook(Number(id), data);
-         toast({
-            title: "Success!",
-            description: "The book has been successfully updated.",
-         });
-      } catch (error) {
-         console.error("Error updating book:", error);
-      }
-
-      navigate("/catalog-book");
-   };
-
-   if (isLoadingBooks) {
-      return <FormSkeleton />;
-   }
+const CreateBook = () => {
+   const { createMenus, form, onSubmitCreatedBook, fileInputRef } = useManageHooks();
 
    return (
-      <Layout submenus={menus}>
+      <Layout submenus={createMenus}>
          <Card className="p-8 w-3/4 m-auto">
             <Form {...form}>
                <form
-                  onSubmit={form.handleSubmit(onSubmit)}
-                  className="grid grid-cols-2 gap-y-3 gap-x-10 items-start"
+                  onSubmit={form.handleSubmit(onSubmitCreatedBook)}
+                  className="grid grid-cols-1 md:grid-cols-2 gap-y-3 gap-x-10 items-start"
                >
                   <FormField
                      control={form.control}
@@ -145,8 +76,8 @@ const EditBook = () => {
                                  pattern="\d*"
                                  onInput={(e) => {
                                     const input = e.target as HTMLInputElement;
-                                    input.value = input.value.replace(/[^0-9]/g, "");
-                                    field.onChange(input.value);
+                                    const value = input.value.replace(/[^0-9]/g, "");
+                                    field.onChange(value ? parseInt(value) : undefined);
                                  }}
                               />
                            </FormControl>
@@ -169,15 +100,13 @@ const EditBook = () => {
                                     const file = e.target.files?.[0];
                                     if (file) {
                                        field.onChange(file.name);
+                                    } else {
+                                       field.onChange("");
                                     }
                                  }}
                               />
                            </FormControl>
-                           <FormDescription className="flex justify-between">
-                              <p className="font-semibold overflow-hidden whitespace-nowrap text-ellipsis">
-                                 Current file : {field.value}
-                              </p>
-                           </FormDescription>
+                           <FormDescription>Format: JPG, PNG</FormDescription>
                            <FormMessage />
                         </FormItem>
                      )}
@@ -197,6 +126,19 @@ const EditBook = () => {
                   />
                   <FormField
                      control={form.control}
+                     name="isbn"
+                     render={({ field }) => (
+                        <FormItem>
+                           <FormLabel>ISBN</FormLabel>
+                           <FormControl>
+                              <Input placeholder="Input ISBN" {...field} />
+                           </FormControl>
+                           <FormMessage />
+                        </FormItem>
+                     )}
+                  />
+                  <FormField
+                     control={form.control}
                      name="price"
                      render={({ field }) => (
                         <FormItem>
@@ -205,12 +147,10 @@ const EditBook = () => {
                               <Input
                                  placeholder="Input Price"
                                  {...field}
-                                 pattern="\d*"
-                                 min="0"
                                  onInput={(e) => {
                                     const input = e.target as HTMLInputElement;
-                                    input.value = input.value.replace(/[^0-9]/g, "");
-                                    field.onChange(input.value);
+                                    const value = input.value.replace(/[^0-9]/g, "");
+                                    field.onChange(value ? parseInt(value) : undefined);
                                  }}
                               />
                            </FormControl>
@@ -218,8 +158,23 @@ const EditBook = () => {
                         </FormItem>
                      )}
                   />
+                  <div className="hidden">
+                     <FormField
+                        control={form.control}
+                        name="status"
+                        render={({ field }) => (
+                           <FormItem>
+                              <FormControl>
+                                 <Input  {...field} />
+                              </FormControl>
+                              <FormMessage />
+                           </FormItem>
+                        )}
+                     />
+                  </div>
+                  <span></span>
                   <div className="flex justify-end">
-                     <Button type="submit" size="lg" className="mt-8 w-60">
+                     <Button type="submit" size="lg" className="mt-8 md:w-60 w-full">
                         Save
                      </Button>
                   </div>
@@ -230,4 +185,4 @@ const EditBook = () => {
    );
 };
 
-export default EditBook;
+export default CreateBook;

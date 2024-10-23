@@ -6,18 +6,22 @@ export const validationSchema = z.object({
   }),
   name: z.string().nonempty({ message: "Name cannot be empty." }),
   gender: z.string().nonempty({ message: "Gender cannot be empty." }),
-  loanDate: z.string().nonempty({ message: "Loan Date cannot be empty." }),
+  lendingDate: z
+    .string()
+    .nonempty({ message: "Lending Date cannot be empty." }),
   returnDate: z.string().nonempty({ message: "Return Date cannot be empty." }),
-  totalItem: z.number().optional(),
+  totalBooks: z.number().optional(),
   status: z.string(),
+  contact: z.string().nonempty({ message: "Name cannot be empty." }),
 });
 
 export const defaultValue = {
   codeBook: [],
   name: "",
   gender: "",
-  loanDate: new Date().toISOString(),
+  lendingDate: new Date().toISOString(),
   returnDate: "",
-  totalItem: 0,
+  totalBooks: 0,
   status: "",
+  contact: "",
 };
