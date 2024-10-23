@@ -105,9 +105,8 @@ const CatalogBook = () => {
                                     className="h-56 w-full object-cover rounded-t-lg"
                                  />
                                  <div
-                                    className={`flex justify-center items-center w-fit h-fit px-2 py-0.5 rounded-full absolute top-2 left-3 ${getStatusStyles(
-                                       book.status,
-                                    ).bg}`}
+                                    className={`flex justify-center items-center w-fit h-fit px-2 py-0.5 rounded-full absolute top-2 left-3 ${getStatusStyles(book.status).bg
+                                       }`}
                                  >
                                     <p className="font-medium text-[10px] text-white">
                                        {book.status}

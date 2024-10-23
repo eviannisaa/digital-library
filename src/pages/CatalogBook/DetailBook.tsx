@@ -17,6 +17,7 @@ const DetailBook = () => {
             await fetchBookById(Number(id));
          } catch (error) { }
       };
+
       fetchBookData();
    }, [id, fetchBookById]);
 
@@ -45,21 +46,22 @@ const DetailBook = () => {
                <div className="flex flex-col md:flex-row gap-x-6 gap-y-3 items-center mt-6 lg:mt-0">
                   <Badge
                      variant="secondary"
-                     className={`w-full md:w-fit text-xs ${getStatusStyles(bookDetails?.status!).text
+                     className={`w-full md:w-fit text-xs flex gap-2 ${getStatusStyles(bookDetails?.status!).text
                         }`}
                   >
                      <div
                         className={`w-2 h-2 rounded-full ${getStatusStyles(bookDetails?.status!).bg
                            }`}
                      ></div>
-                     &nbsp;&nbsp;{bookDetails?.status}
+                     <p>{bookDetails?.status}</p>
                   </Badge>
+
                   <Badge
                      variant="secondary"
-                     className="font-semibold w-full md:w-fit"
+                     className="font-semibold w-full md:w-fit flex gap-2"
                   >
                      <div className={`w-2 h-2 bg-black rounded-full`}></div>
-                     &nbsp;&nbsp;Code Book : {bookDetails?.codeBook}
+                     <p> Code Book : {bookDetails?.codeBook}</p>
                   </Badge>
                </div>
 
@@ -68,18 +70,18 @@ const DetailBook = () => {
                </p>
 
                <p className="text-sm font-normal text-gray-600">
-                  {bookDetails?.description}Lorem ipsum dolor sit amet, consectetur
-                  adipiscing elit. Maecenas pellentesque nunc euismod congue
-                  efficitur. Quisque venenatis fringilla interdum. Class aptent taciti
-                  sociosqu ad litora torquent per conubia nostra, per inceptos
-                  himenaeos. Curabitur sed porta nisl. Sed justo risus, eleifend a
-                  lacinia vitae, iaculis ac tortor. Aenean at lectus leo. Donec varius
-                  aliquam mi sed consequat. Sed nec ornare justo.
+                  {bookDetails?.description}
+                  {/* additional text for the summary */}
+                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas
+                  pellentesque nunc euismod congue efficitur. Quisque venenatis
+                  fringilla interdum. Class aptent taciti sociosqu ad litora torquent
+                  per conubia nostra, per inceptos himenaeos. Curabitur sed porta
+                  nisl. Sed justo risus, eleifend a lacinia vitae, iaculis ac tortor.
+                  Aenean at lectus leo. Donec varius aliquam mi sed consequat. Sed nec
+                  ornare justo.
                </p>
 
-               <div className="my-2">
-                  <hr />
-               </div>
+               <hr className="my-2" />
 
                <div>
                   <p className="font-semibold text-sm ">Information</p>

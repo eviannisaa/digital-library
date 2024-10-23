@@ -1,12 +1,15 @@
-import { useBooksStore } from "@/store/useBookStore";
 import { useState } from "react";
+import { useBooksStore } from "@/store/useBookStore";
 import { useNavigate, useParams } from "react-router-dom";
 
 export const useCatalogHooks = () => {
-  const { filteredBooks } = useBooksStore();
+  /*  -------------------------------- STATE --------------------------------- */
   const { id } = useParams<{ id: string }>();
   const [currentPage, setCurrentPage] = useState(1);
+  const { filteredBooks } = useBooksStore();
   const navigate = useNavigate();
+
+  /* --------------------------- HANDLER FUNCTIONS --------------------------- */
 
   const itemsPerPage = 10;
   const displayedBooks = filteredBooks.slice(0, currentPage * itemsPerPage);
@@ -14,6 +17,8 @@ export const useCatalogHooks = () => {
   const handleLoadMore = () => {
     setCurrentPage((prevPage) => prevPage + 1);
   };
+
+  /* ---------------------------------- MENU ---------------------------------- */
 
   const menus = [
     {
@@ -28,6 +33,8 @@ export const useCatalogHooks = () => {
     },
   ];
 
+  /* ------------------------------ STYLING LOGIC ---------------------------- */
+
   const getStatusStyles = (status: string) => {
     switch (status) {
       case "Available":
@@ -41,7 +48,9 @@ export const useCatalogHooks = () => {
     }
   };
 
-  function formatPrice(price: number) {
+  /* ----------------------------- HELPER FUNCTION --------------------------- */
+
+  const formatPrice = (price: number) => {
     if (typeof price !== "number" || isNaN(price)) {
       return "$0.00";
     }
@@ -49,15 +58,17 @@ export const useCatalogHooks = () => {
       style: "currency",
       currency: "USD",
     });
-  }
+  };
+
+  /* ---------------------------------- RETURN ------------------------------- */
 
   return {
+    id,
+    navigate,
     menus,
     formatPrice,
     getStatusStyles,
     displayedBooks,
     handleLoadMore,
-    id,
-    navigate,
   };
 };
