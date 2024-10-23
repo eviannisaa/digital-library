@@ -8,14 +8,15 @@ Digital Library is a platform designed to facilitate users in borrowing books an
 - Book details view
 - Book status tracking (Available, Borrowed, Reserved)
 - Book catalog management (CRUD operations)
-- Basic lending status visualization
+- Basic lending status visualization (Returned, Not Yet Returned, Reserved)
 
 ## Technologies Used
-- Tech Stack : React
+- Frontend Framework : React
 - Build Tool : Vite
-- UI/Component : shadcn/ui
+- UI/Component : shadcn/UI
 - State Management : Zustand
 - Mock Data : JSON Server
+- Data Validation: Zod
 
 ## Prerequisites
 Before getting started, make sure you have the following installed:
@@ -50,6 +51,4 @@ Follow these steps to set up the project:
 
 <br>
 
-Thank you for visiting! I hope you find this information useful and helpful!
-<br>
 Happy Hacking! 💻✨
