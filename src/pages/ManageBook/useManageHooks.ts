@@ -29,10 +29,12 @@ export const useManageHooks = () => {
     values: z.infer<typeof validationSchema>,
   ) => {
     try {
+      const bookId = Math.floor(Math.random() * 1000);
       await createBook({
         ...values,
-        id: Math.floor(Math.random() * 1000),
+        id: bookId,
         genre: "",
+        status: "Available",
       });
 
       form.reset();
@@ -84,6 +86,7 @@ export const useManageHooks = () => {
         coverBook: bookDetails?.coverBook ?? "",
         codeBook: bookDetails?.codeBook ?? "",
         isbn: bookDetails?.isbn ?? "",
+        status: bookDetails.status ?? "",
       });
     }
   }, [form, bookDetails]);

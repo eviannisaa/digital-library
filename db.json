@@ -239,32 +239,6 @@
       "status": "Available",
       "codeBook": "S2N",
       "coverBook": "https://m.media-amazon.com/images/I/61HQGgJi6WL._SL1500_.jpg"
-    },
-    {
-      "id": 354.3723774697599,
-      "codeBook": "2020",
-      "author": "test lagii",
-      "title": "tes lagiii",
-      "description": "test lagiii",
-      "year": "2020",
-      "price": 45345,
-      "coverBook": "Unknown-6.jpg",
-      "status": "",
-      "isbn": "",
-      "genre": ""
-    },
-    {
-      "id": 749.8512283215206,
-      "codeBook": "2020",
-      "author": "tamasd",
-      "title": "asda",
-      "description": "sada",
-      "year": "3453",
-      "price": 234,
-      "coverBook": "Unknown-6.jpg",
-      "status": "Available",
-      "isbn": "",
-      "genre": ""
     }
   ],
   "users": [
