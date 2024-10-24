@@ -43,7 +43,6 @@ import { useBooksStore } from "@/store/useBookStore";
 import { ListSkeleton } from "@/components/ui/skeleton";
 import { ChevronDownIcon, Pencil1Icon, TrashIcon } from "@radix-ui/react-icons";
 import { useManageHooks } from "./useManageHooks";
-import { useNavigate } from "react-router-dom";
 
 interface Book {
    id: number;
@@ -155,7 +154,6 @@ export const columns: ColumnDef<Book | any>[] = [
       header: () => <div className="text-center">Actions</div>,
       cell: ({ row }) => {
          const { handleDeleteBook } = useBooksStore();
-         const navigate = useNavigate();
          return (
             <div className="flex flex-row justify-center gap-6">
                <AlertDialog>
@@ -185,7 +183,9 @@ export const columns: ColumnDef<Book | any>[] = [
                <Button
                   size="icon"
                   className="w-8 h-8"
-                  onClick={() => window.location.href = `/catalog-book/edit/${row.original.id}`}
+                  onClick={() =>
+                     (window.location.href = `/catalog-book/edit/${row.original.id}`)
+                  }
                >
                   <Pencil1Icon />
                </Button>
