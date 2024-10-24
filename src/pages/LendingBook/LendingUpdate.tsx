@@ -128,6 +128,7 @@ const LendingUpdate = () => {
                               <FormControl>
                                  <Input placeholder="Input Contact" {...field} />
                               </FormControl>
+                              <FormMessage />
                            </FormItem>
                         )}
                      />
@@ -193,6 +194,7 @@ const LendingUpdate = () => {
                                     control={form.control}
                                     name="codeBook"
                                     render={({ field }) => {
+                                       const status = item.status === "Borrowed" || item.status === "Reserved"
                                        return (
                                           <FormItem
                                              key={item.id}
@@ -209,7 +211,6 @@ const LendingUpdate = () => {
                                                          );
 
                                                       field.onChange(newValue);
-
                                                       const totalCount = newValue.length;
                                                       form.setValue("totalBooks", totalCount);
                                                    }}
@@ -220,9 +221,9 @@ const LendingUpdate = () => {
                                                    }
                                                 />
                                              </FormControl>
-                                             <FormLabel className="text-sm font-normal">
+                                             <div className={`text-sm font-normal ${status && "text-gray-400"}`}>
                                                 {`[${item.codeBook}] ${item.title}`}
-                                             </FormLabel>
+                                             </div>
                                           </FormItem>
                                        );
                                     }}

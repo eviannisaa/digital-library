@@ -56,15 +56,16 @@ const LendingForm = () => {
                                  onValueChange={field.onChange}
                                  className="grid grid-cols-2"
                               >
-                                 <div className="flex items-center space-x-2">
+                                 <div className="flex items-center space-x-2 my-2.5">
                                     <RadioGroupItem value="Male" id="r1" />
                                     <Label htmlFor="male">Male</Label>
                                  </div>
-                                 <div className="flex items-center space-x-2">
+                                 <div className="flex items-center space-x-2 my-2.5">
                                     <RadioGroupItem value="Female" id="r2" />
                                     <Label htmlFor="female">Female</Label>
                                  </div>
                               </RadioGroup>
+                              <FormMessage />
                            </FormItem>
                         )}
                      />
@@ -155,6 +156,7 @@ const LendingForm = () => {
                                     control={form.control}
                                     name="codeBook"
                                     render={({ field }) => {
+                                       const status = item.status === "Borrowed" || item.status === "Reserved"
                                        return (
                                           <FormItem
                                              key={item.id}
@@ -175,15 +177,12 @@ const LendingForm = () => {
                                                       const totalCount = newValue.length;
                                                       form.setValue("totalBooks", totalCount);
                                                    }}
-                                                   disabled={
-                                                      item.status === "Borrowed" ||
-                                                      item.status === "Reserved"
-                                                   }
+                                                   disabled={status}
                                                 />
                                              </FormControl>
-                                             <FormLabel className="text-sm font-normal">
+                                             <div className={`text-sm font-normal ${status && "text-gray-400"}`}>
                                                 {`[${item.codeBook}] ${item.title}`}
-                                             </FormLabel>
+                                             </div>
                                           </FormItem>
                                        );
                                     }}
