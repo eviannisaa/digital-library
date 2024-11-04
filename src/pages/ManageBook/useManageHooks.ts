@@ -15,6 +15,7 @@ export const useManageHooks = () => {
   const navigate = useNavigate();
   const { createBook, editBook, bookDetails } = useBooksStore();
 
+  const bookId = JSON.parse(localStorage.getItem("lastIdBook")!);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const form = useForm<z.infer<typeof validationSchema>>({
@@ -29,10 +30,9 @@ export const useManageHooks = () => {
     values: z.infer<typeof validationSchema>,
   ) => {
     try {
-      const bookId = Math.floor(Math.random() * 1000);
       await createBook({
         ...values,
-        id: bookId,
+        id: bookId + 1,
         genre: "",
         status: "Available",
       });

@@ -17,7 +17,7 @@ import Layout from "@/components/ui/layout";
 
 const CatalogBook = () => {
    const {
-      filteredBooks,
+      books,
       isLoadingBooks,
       fetchBooks,
       searchQuery,
@@ -50,12 +50,10 @@ const CatalogBook = () => {
                <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                      <Button variant="outline">
-                        {filterBy ? (
+                        {filterBy && (
                            <div className="capitalize flex items-center gap-2">
                               {filterBy} <ChevronDownIcon />
                            </div>
-                        ) : (
-                           "Select..."
                         )}
                      </Button>
                   </DropdownMenuTrigger>
@@ -134,7 +132,7 @@ const CatalogBook = () => {
                         ))}
                      </div>
 
-                     {displayedBooks.length < filteredBooks.length && (
+                     {displayedBooks.length < books.length && (
                         <div className="flex justify-center mt-5">
                            <Button onClick={handleLoadMore}>Load More</Button>
                         </div>

@@ -6,28 +6,16 @@ export const useCatalogHooks = () => {
   /*  -------------------------------- STATE --------------------------------- */
   const { id } = useParams<{ id: string }>();
   const [currentPage, setCurrentPage] = useState(1);
-  const { filteredBooks } = useBooksStore();
+  const { books } = useBooksStore();
   const navigate = useNavigate();
 
   /* --------------------------- HANDLER FUNCTIONS --------------------------- */
 
   const itemsPerPage = 10;
-  const displayedBooks = filteredBooks.slice(0, currentPage * itemsPerPage);
+  const displayedBooks = books.slice(0, currentPage * itemsPerPage);
 
   const handleLoadMore = () => {
     setCurrentPage((prevPage) => prevPage + 1);
-  };
-
-  /* ----------------------------- HELPER FUNCTION --------------------------- */
-
-  const formatPrice = (price: number) => {
-    if (typeof price !== "number" || isNaN(price)) {
-      return "$0.00";
-    }
-    return price.toLocaleString("en-US", {
-      style: "currency",
-      currency: "USD",
-    });
   };
 
   /* ---------------------------------- MENU ---------------------------------- */
@@ -67,7 +55,6 @@ export const useCatalogHooks = () => {
     navigate,
     displayedBooks,
     handleLoadMore,
-    formatPrice,
     menus,
     getStatusStyles,
   };

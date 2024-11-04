@@ -142,7 +142,7 @@ export const columns: ColumnDef<UserBorrow | any>[] = [
       accessorKey: "actions",
       header: () => <div className="text-center">Actions</div>,
       cell: ({ row }) => {
-         const { handleDeleteUser } = useBorrowStore();
+         const { deleteUserBorrow } = useBorrowStore();
          return (
             <div className="flex flex-row justify-center gap-6">
                <AlertDialog>
@@ -162,7 +162,7 @@ export const columns: ColumnDef<UserBorrow | any>[] = [
                      <AlertDialogFooter>
                         <AlertDialogCancel>Cancel</AlertDialogCancel>
                         <AlertDialogAction
-                           onClick={() => handleDeleteUser(row.original.id)}
+                           onClick={() => deleteUserBorrow(row.original.id)}
                         >
                            Continue
                         </AlertDialogAction>
@@ -191,11 +191,11 @@ const LendingList = () => {
    const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
    const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
    const [rowSelection, setRowSelection] = useState({});
-   const { filteredUsers, fetchUsers, isLoadingUsers } = useBorrowStore();
+   const { users, fetchUsers, isLoadingUsers } = useBorrowStore();
    const { listMenus } = useLandingHooks();
 
    const table = useReactTable({
-      data: filteredUsers,
+      data: users,
       columns,
       onSortingChange: setSorting,
       onColumnFiltersChange: setColumnFilters,

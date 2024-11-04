@@ -43,6 +43,7 @@ import { useBooksStore } from "@/store/useBookStore";
 import { ListSkeleton } from "@/components/ui/skeleton";
 import { ChevronDownIcon, Pencil1Icon, TrashIcon } from "@radix-ui/react-icons";
 import { useManageHooks } from "./useManageHooks";
+import { formatAmount } from "@/utils/formatAmount";
 
 interface Book {
    id: number;
@@ -111,14 +112,7 @@ export const columns: ColumnDef<Book | any>[] = [
       accessorKey: "price",
       header: "Price",
       cell: ({ row }) => {
-         const price = parseFloat(row.getValue("price"));
-         const formatted = !isNaN(price)
-            ? new Intl.NumberFormat("en-US", {
-               style: "currency",
-               currency: "IDR",
-            }).format(price)
-            : "";
-         return <div className="capitalize">{formatted}</div>;
+         return <div className="capitalize">{formatAmount(row.getValue("price"))}</div>;
       },
       enableGlobalFilter: true,
    },
@@ -153,7 +147,7 @@ export const columns: ColumnDef<Book | any>[] = [
       accessorKey: "actions",
       header: () => <div className="text-center">Actions</div>,
       cell: ({ row }) => {
-         const { handleDeleteBook } = useBooksStore();
+         const { deleteBook } = useBooksStore();
          return (
             <div className="flex flex-row justify-center gap-6">
                <AlertDialog>
@@ -173,7 +167,7 @@ export const columns: ColumnDef<Book | any>[] = [
                      <AlertDialogFooter>
                         <AlertDialogCancel>Cancel</AlertDialogCancel>
                         <AlertDialogAction
-                           onClick={() => handleDeleteBook(row.original.id)}
+                           onClick={() => deleteBook(row.original.id)}
                         >
                            Continue
                         </AlertDialogAction>
@@ -200,11 +194,11 @@ const ListBook = () => {
    const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
    const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
    const [rowSelection, setRowSelection] = useState({});
-   const { filteredBooks, isLoadingBooks, fetchBooks } = useBooksStore();
+   const { books, isLoadingBooks, fetchBooks } = useBooksStore();
    const { listMenus } = useManageHooks();
 
    const table = useReactTable({
-      data: filteredBooks,
+      data: books,
       columns,
       onSortingChange: setSorting,
       onColumnFiltersChange: setColumnFilters,

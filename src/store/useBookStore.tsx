@@ -1,3 +1,4 @@
+import { fetchData } from "@/utils/fetchData";
 import { create } from "zustand";
 
 interface Book {
@@ -16,45 +17,49 @@ interface Book {
 
 interface BooksState {
   books: Book[];
-  filteredBooks: Book[];
+  allBooks: Book[];
   isLoadingBooks: boolean;
-  searchBooks: (
-    q: string,
-    filterBy: "all" | "author" | "title" | "status" | "year" | "codeBook",
-  ) => void;
-  createBook: (newBook: Book) => Promise<void>;
-  handleDeleteBook: (id: number) => Promise<void>;
-  editBook: (id: number, updatedBook: Book) => Promise<void>;
-  fetchBooks: () => void;
-  fetchBookById: (id: number) => Promise<void>;
   bookDetails: Book | null;
+
+  fetchBooks: () => Promise<void>;
+  fetchBookById: (id: number) => Promise<void>;
+  createBook: (newBook: Book) => Promise<void>;
+  editBook: (id: number, updatedBook: Book) => Promise<void>;
+  deleteBook: (id: number) => Promise<void>;
 
   searchQuery: string;
   setSearchQuery: (query: string) => void;
   filterBy: "all" | "author" | "title" | "status" | "year" | "codeBook";
-  setFilterBy: (filter: "all" | "author" | "title" | "status" | "year" | "codeBook") => void;
+  setFilterBy: (
+    filter: "all" | "author" | "title" | "status" | "year" | "codeBook",
+  ) => void;
+
   isSearching: boolean;
+  searchBooks: (q: string, filterBy: string) => void;
   handleSearch: () => void;
 }
 
 export const useBooksStore = create<BooksState>((set, get) => ({
   books: [],
-  filteredBooks: [],
+  allBooks: [],
   isLoadingBooks: true,
-  searchQuery: "",
-  filterBy: "all",
-  isSearching: false,
   bookDetails: null,
+
+  searchQuery: "",
   setSearchQuery: (query: string) => set({ searchQuery: query }),
-  setFilterBy: (filter: "all" | "author" | "title" | "status" | "year" | "codeBook") =>
-    set({ filterBy: filter }),
+  filterBy: "all",
+  setFilterBy: (
+    filter: "all" | "author" | "title" | "status" | "year" | "codeBook",
+  ) => set({ filterBy: filter }),
+  isSearching: false,
 
   fetchBooks: async () => {
     set({ isLoadingBooks: true });
     try {
-      const response = await fetch("http://localhost:3000/books");
-      const data = await response.json();
-      set({ books: data, filteredBooks: data });
+      const data = await fetchData("http://localhost:3000/books");
+      set({ books: data, allBooks: data });
+      const lastID = data[data.length - 1]?.id
+      localStorage.setItem("lastIdBook", JSON.stringify(lastID))
     } catch (error) {
       console.error("error fetching books", error);
     } finally {
@@ -65,11 +70,10 @@ export const useBooksStore = create<BooksState>((set, get) => ({
   fetchBookById: async (id: number) => {
     set({ isLoadingBooks: true });
     try {
-      const response = await fetch(`http://localhost:3000/books/${id}`);
-      const json = await response.json();
-      set({ bookDetails: json });
+      const data = await fetchData(`http://localhost:3000/books/${id}`);
+      set({ bookDetails: data });
     } catch (error) {
-      console.error("Error fetching book data:", error);
+      console.error("Error fetching detail book:", error);
     } finally {
       set({ isLoadingBooks: false });
     }
@@ -77,77 +81,52 @@ export const useBooksStore = create<BooksState>((set, get) => ({
 
   createBook: async (newBook: Book) => {
     try {
-      const response = await fetch("http://localhost:3000/books", {
+      const data = await fetchData("http://localhost:3000/books", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(newBook),
+        body: newBook,
       });
-
-      const addedBook = await response.json();
       set((state) => ({
-        books: [...state.books, addedBook],
-        filteredBooks: [...state.filteredBooks, addedBook],
+        books: [...state.books, data],
       }));
     } catch (error) {
-      console.error(error);
-    }
-  },
-
-  handleDeleteBook: async (id: number) => {
-    try {
-      const response = await fetch(`http://localhost:3000/books/${id}`, {
-        method: "DELETE",
-      });
-
-      if (!response.ok) {
-        throw new Error("Network response was not ok " + response.statusText);
-      }
-
-      set((state) => ({
-        books: state.books.filter((book) => book.id !== id),
-        filteredBooks: state.filteredBooks.filter((book) => book.id !== id),
-      }));
-    } catch (error) {
-      console.error("Error deleting book:", error);
+      console.error("Error adding book", error);
     }
   },
 
   editBook: async (id: number, updatedBook: Book) => {
     try {
-      const response = await fetch(`http://localhost:3000/books/${id}`, {
+      const data = await fetchData(`http://localhost:3000/books/${id}`, {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(updatedBook),
+        body: updatedBook,
       });
-
-      if (!response.ok) {
-        throw new Error("Error updating book");
-      }
-
-      const newBook = await response.json();
-
       set((state) => ({
-        books: state.books.map((book) => (book.id === id ? newBook : book)),
-        filteredBooks: state.filteredBooks.map((book) =>
-          book.id === id ? newBook : book,
-        ),
+        books: state.books.map((book) => (book.id === id ? data : book)),
       }));
     } catch (error) {
       console.error("Error updating book:", error);
     }
   },
 
+  deleteBook: async (id: number) => {
+    try {
+      await fetchData(`http://localhost:3000/books/${id}`, {
+        method: "DELETE",
+      });
+      set((state) => ({
+        books: state.books.filter((book) => book.id !== id),
+      }));
+    } catch (error) {
+      console.error("Error deleting book:", error);
+    }
+  },
+
   searchBooks: (q, filterBy) => {
     const query = q.trim().toLowerCase();
-    const matchQuery = (str: string) => str.toString().toLowerCase().includes(query);
-    const books = get().books;
+    const matchQuery = (str: string) =>
+      str?.toString().toLowerCase().includes(query);
+    const { allBooks } = get();
 
-    if (!query) {
-      set({ filteredBooks: books });
-      return;
-    }
-
-    const filteredBooks = books.filter((book) => {
+    const filteredBooks = allBooks.filter((book) => {
       if (filterBy === "author") return matchQuery(book.author);
       if (filterBy === "title") return matchQuery(book.title);
       if (filterBy === "status") return matchQuery(book.status);
@@ -157,12 +136,12 @@ export const useBooksStore = create<BooksState>((set, get) => ({
         matchQuery(book.author) ||
         matchQuery(book.title) ||
         matchQuery(book.status) ||
-        book.year.toString().includes(query) ||
-        book.codeBook.includes(query)
+        matchQuery(String(book.year)) ||
+        matchQuery(book.codeBook)
       );
     });
 
-    set({ filteredBooks });
+    set({ books: filteredBooks });
   },
 
   handleSearch: () => {

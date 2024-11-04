@@ -13,7 +13,9 @@ export const useLandingHooks = () => {
   const { id } = useParams<{ id: string }>();
   const { toast } = useToast();
   const navigate = useNavigate();
-  const { addUserBorrow, userDetails, editUserBorrow } = useBorrowStore();
+  const { addUserBorrow, editUserBorrow, userDetails } = useBorrowStore();
+
+  const userBorrowId = JSON.parse(localStorage.getItem("lastIdUserBorrow")!);
 
   const form = useForm<z.infer<typeof validationSchema>>({
     resolver: zodResolver(validationSchema),
@@ -23,11 +25,13 @@ export const useLandingHooks = () => {
 
   /* --------------------------- HANDLER FUNCTIONS --------------------------- */
 
-  const onAddedLending = async (values: z.infer<typeof validationSchema>) => {
+  const onSubmitAddedUserBorrow = async (
+    values: z.infer<typeof validationSchema>,
+  ) => {
     try {
       await addUserBorrow({
         ...values,
-        id: Math.floor(Math.random() * 1000),
+        id: userBorrowId + 1,
         totalDays: 0,
       });
       form.reset();
@@ -37,18 +41,20 @@ export const useLandingHooks = () => {
       });
       navigate("/lending-book");
     } catch (error) {
-      console.error("Failed to add user:", error);
+      toast({
+        title: "Failed!",
+        description: `Error adding users:${error}`,
+      });
     }
   };
 
-  const onUpdatedLending = async (data: any) => {
+  const onSubmitUpdatedUserBook = async (data: any) => {
     try {
       await editUserBorrow(Number(id), data);
       toast({
         title: "Success!",
         description: "The users has been successfully updated.",
       });
-
       navigate("/lending-book");
     } catch (error) {
       toast({
@@ -144,8 +150,8 @@ export const useLandingHooks = () => {
     form,
     listMenus,
     formMenus,
-    onAddedLending,
-    onUpdatedLending,
+    onSubmitAddedUserBorrow,
+    onSubmitUpdatedUserBook,
     updateMenus,
     getStatusStyles,
   };

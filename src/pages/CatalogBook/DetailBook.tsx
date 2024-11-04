@@ -4,22 +4,17 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useBooksStore } from "@/store/useBookStore";
 import { useCatalogHooks } from "./useCatalogHooks";
+import { formatAmount } from "@/utils/formatAmount";
 import Layout from "@/components/ui/layout";
 
 const DetailBook = () => {
    const { fetchBookById, bookDetails } = useBooksStore();
-   const { menus, getStatusStyles, formatPrice, id, navigate } =
+   const { menus, getStatusStyles, id, navigate } =
       useCatalogHooks();
 
    useEffect(() => {
-      const fetchBookData = async () => {
-         try {
-            await fetchBookById(Number(id));
-         } catch (error) { }
-      };
-
-      fetchBookData();
-   }, [id, fetchBookById]);
+      fetchBookById(Number(id))
+   }, [fetchBookById]);
 
    return (
       <Layout submenus={menus}>
@@ -101,7 +96,7 @@ const DetailBook = () => {
                      <div className="flex flex-col gap-1">
                         <p className="font-medium">Price</p>
                         <p className="text-gray-600">
-                           {formatPrice(bookDetails?.price!)}
+                           {formatAmount(bookDetails?.price!)}
                         </p>
                      </div>
                   </div>

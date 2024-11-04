@@ -19,8 +19,8 @@ import { useBooksStore } from "@/store/useBookStore";
 import { useLandingHooks } from "./useLendingHooks";
 
 const LendingForm = () => {
-   const { filteredBooks, fetchBooks } = useBooksStore();
-   const { formMenus, form, onAddedLending } = useLandingHooks();
+   const { books, fetchBooks } = useBooksStore();
+   const { formMenus, form, onSubmitAddedUserBorrow } = useLandingHooks();
 
    useEffect(() => {
       fetchBooks();
@@ -30,7 +30,7 @@ const LendingForm = () => {
       <Layout submenus={formMenus}>
          <Card className="p-8 w-3/4 m-auto">
             <Form {...form}>
-               <form onSubmit={form.handleSubmit(onAddedLending)}>
+               <form onSubmit={form.handleSubmit(onSubmitAddedUserBorrow)}>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-y-3 gap-x-10 mb-4 items-start">
                      <FormField
                         control={form.control}
@@ -150,7 +150,7 @@ const LendingForm = () => {
                               </FormDescription>
                            </div>
                            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 items-start">
-                              {filteredBooks.map((item) => (
+                              {books.map((item) => (
                                  <FormField
                                     key={item.id}
                                     control={form.control}

@@ -22,17 +22,12 @@ import { useLandingHooks } from "./useLendingHooks";
 
 const LendingUpdate = () => {
    const { isLoadingUsers, fetchUserById, fetchUsers } = useBorrowStore();
-   const { filteredBooks, isLoadingBooks, fetchBooks } = useBooksStore();
-   const { id, updateMenus, form, onUpdatedLending } = useLandingHooks();
+   const { books, isLoadingBooks, fetchBooks } = useBooksStore();
+   const { id, updateMenus, form, onSubmitUpdatedUserBook } = useLandingHooks();
 
    useEffect(() => {
-      const fetchBookData = async () => {
-         try {
-            await fetchUserById(Number(id));
-         } catch (error) { }
-      };
-      fetchBookData();
-   }, [id, fetchUserById]);
+      fetchUserById(Number(id));
+   }, [fetchUserById]);
 
    useEffect(() => {
       fetchBooks();
@@ -47,7 +42,7 @@ const LendingUpdate = () => {
       <Layout submenus={updateMenus}>
          <Card className="p-8 w-3/4 m-auto">
             <Form {...form}>
-               <form onSubmit={form.handleSubmit(onUpdatedLending)}>
+               <form onSubmit={form.handleSubmit(onSubmitUpdatedUserBook)}>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-y-3 gap-x-10 mb-5 items-start">
                      <FormField
                         control={form.control}
@@ -180,7 +175,7 @@ const LendingUpdate = () => {
                      render={() => (
                         <FormItem>
                            <div className="mb-4">
-                              <FormLabel className="text-base">
+                              <FormLabel className="text-base block">
                                  Update Your Books
                               </FormLabel>
                               <FormDescription>
@@ -188,13 +183,15 @@ const LendingUpdate = () => {
                               </FormDescription>
                            </div>
                            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 items-start">
-                              {filteredBooks.map((item) => (
+                              {books.map((item) => (
                                  <FormField
                                     key={item.id}
                                     control={form.control}
                                     name="codeBook"
                                     render={({ field }) => {
-                                       const status = item.status === "Borrowed" || item.status === "Reserved"
+                                       const status =
+                                          item.id !== Number(id) &&
+                                          item.status === "Borrowed";
                                        return (
                                           <FormItem
                                              key={item.id}
@@ -204,24 +201,20 @@ const LendingUpdate = () => {
                                                 <Checkbox
                                                    checked={field.value?.includes(item.codeBook)}
                                                    onCheckedChange={(checked) => {
+                                                      const currentValues = Array.isArray(field.value) ? field.value : [];
                                                       const newValue = checked
-                                                         ? [...field.value, item.codeBook]
-                                                         : field.value.filter(
-                                                            (value) => value !== item.codeBook,
-                                                         );
-
+                                                         ? [...new Set([...currentValues, item.codeBook])]
+                                                         : currentValues.filter((value) => value !== item.codeBook);
                                                       field.onChange(newValue);
-                                                      const totalCount = newValue.length;
-                                                      form.setValue("totalBooks", totalCount);
+                                                      form.setValue("totalBooks", newValue.length);
                                                    }}
-                                                   disabled={
-                                                      item.id !== Number(id) &&
-                                                      (item.status === "Borrowed" ||
-                                                         item.status === "Reserved")
-                                                   }
+                                                   disabled={status}
                                                 />
                                              </FormControl>
-                                             <div className={`text-sm font-normal ${status && "text-gray-400"}`}>
+                                             <div
+                                                className={`text-sm font-normal ${status && "text-gray-400"
+                                                   }`}
+                                             >
                                                 {`[${item.codeBook}] ${item.title}`}
                                              </div>
                                           </FormItem>

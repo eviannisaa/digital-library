@@ -73,6 +73,7 @@ const CreateBook = () => {
                               <Input
                                  placeholder="Input Year"
                                  {...field}
+                                 value={field?.value || ""}
                                  onInput={(e) => {
                                     const input = e.target as HTMLInputElement;
                                     const value = input.value.replace(/[^0-9]/g, "");

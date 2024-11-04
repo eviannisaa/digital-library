@@ -24,13 +24,8 @@ const EditBook = () => {
       useManageHooks();
 
    useEffect(() => {
-      const fetchBookData = async () => {
-         try {
-            await fetchBookById(Number(id));
-         } catch (error) { }
-      };
-      fetchBookData();
-   }, [id, fetchBookById]);
+      fetchBookById(Number(id))
+   }, [fetchBookById]);
 
    if (isLoadingBooks) {
       return <FormSkeleton />;
@@ -93,6 +88,7 @@ const EditBook = () => {
                               <Input
                                  placeholder="Input Year"
                                  {...field}
+                                 value={field?.value || ""}
                                  onInput={(e) => {
                                     const input = e.target as HTMLInputElement;
                                     const value = input.value.replace(/[^0-9]/g, "");

@@ -28,7 +28,7 @@ export const defaultValue = {
   title: "",
   description: "",
   year: undefined,
-  price: undefined,
+  price: 0,
   coverBook: "",
   codeBook: "",
   status: "",

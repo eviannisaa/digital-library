@@ -17,7 +17,7 @@ import {
 const Home = () => {
    const navigate = useNavigate();
    const {
-      filteredBooks,
+      books,
       isLoadingBooks,
       fetchBooks,
       searchQuery,
@@ -97,10 +97,10 @@ const Home = () => {
             </div>
 
             <div>
-               {filteredBooks.length > 0 && (
+               {books.length > 0 && (
                   <div className="flex justify-between items-center mb-2">
                      <p className="font-semibold text-lg">New Collection</p>
-                     {filteredBooks.length > 10 && (
+                     {books.length > 10 && (
                         <Button
                            variant="link"
                            className="text-xs"
@@ -116,9 +116,10 @@ const Home = () => {
                   <div className="border rounded-lg w-full h-60 flex justify-center items-center">
                      <p className="text-center text-sm">Loading...</p>
                   </div>
-               ) : filteredBooks.length > 0 ? (
+               ) : books.length > 0 ? (
+
                   <div className="grid grid-cols-2 md:grid-cols-5 gap-x-5 gap-y-7">
-                     {filteredBooks.slice(0, 10).map((book, i) => (
+                     {books.slice(0, 10).map((book, i) => (
                         <Card key={i}>
                            <div className="relative">
                               <img
